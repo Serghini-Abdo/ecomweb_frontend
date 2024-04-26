@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function App() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/products');
+        setProducts(response.data);
+        console.log(response);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []); // Empty dependency array ensures it runs only once on component mount
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Products:</h2>
+      <ul>
+        {products.map((product) => (
+        <div key={product.id}>
+            <li key={product.id}>{product.name}</li>
+            <li key={product.id}>{product.desc}</li>
+            <li key={product.id}>{product.sell_price}</li>
+        </div>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
 export default App;
+
